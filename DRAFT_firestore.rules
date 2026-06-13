@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Global Safety Net catch-all block
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // 2. Core Reusable Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+    
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    
+    function incoming() {
+      return request.resource.data;
+    }
+    
+    function existing() {
+      return resource.data;
+    }
+    
+    // 3. Entity Blueprint Validation Helpers
+    function isValidUser(user) {
+      return user.uid is string && user.uid.size() <= 128 && user.uid == request.auth.uid
+        && user.email is string && user.email.size() <= 128
+        && user.displayName is string && user.displayName.size() <= 100
+        && (!('photoURL' in user) || (user.photoURL is string && user.photoURL.size() <= 2048))
+        && (!('phoneNumber' in user) || (user.phoneNumber is string && user.phoneNumber.size() <= 30))
+        && (!('playlistCount' in user) || user.playlistCount is int)
+        && (!('listeningMinutes' in user) || user.listeningMinutes is int)
+        && (!('themeMode' in user) || (user.themeMode is string && (user.themeMode == 'light' || user.themeMode == 'dark')))
+        && (!('likedTracks' in user) || (user.likedTracks is list && user.likedTracks.size() <= 1000))
+        && (!('recentlyPlayed' in user) || (user.recentlyPlayed is list && user.recentlyPlayed.size() <= 100))
+        && (!('followedArtists' in user) || (user.followedArtists is list && user.followedArtists.size() <= 200));
+    }
+    
+    function isValidPlaylist(playlist) {
+      return playlist.id is string && playlist.id.size() <= 128
+        && playlist.name is string && playlist.name.size() <= 100
+        && (!('description' in playlist) || (playlist.description is string && playlist.description.size() <= 500))
+        && (!('coverUrl' in playlist) || (playlist.coverUrl is string && playlist.coverUrl.size() <= 2048))
+        && (!('coverColor' in playlist) || (playlist.coverColor is string && playlist.coverColor.size() <= 100))
+        && playlist.trackIds is list && playlist.trackIds.size() <= 200
+        && playlist.isPublic is bool
+        && playlist.creatorId is string && playlist.creatorId == request.auth.uid
+        && playlist.creatorName is string && playlist.creatorName.size() <= 100;
+    }
+    
+    // 4. Secure Match Patterns
+    match /users/{userId} {
+      allow get: if isSignedIn() && userId == request.auth.uid;
+      allow list: if false; // Blanket user scraping blocked
+      
+      allow create: if isVerified() && userId == request.auth.uid && isValidId(userId)
+        && isValidUser(incoming());
+        
+      allow update: if isVerified() && userId == request.auth.uid && isValidId(userId)
+        && isValidUser(incoming())
+        && incoming().uid == existing().uid
+        && incoming().email == existing().email;
+        
+      allow delete: if false; // Profiles are immortally persistent
+    }
+    
+    match /playlists/{playlistId} {
+      // Read Operations
+      allow get: if isSignedIn() && (existing().isPublic == true || existing().creatorId == request.auth.uid);
+      allow list: if isSignedIn() && (resource.data.isPublic == true || resource.data.creatorId == request.auth.uid);
+      
+      // Write Operations
+      allow create: if isVerified() && isValidId(playlistId)
+        && isValidPlaylist(incoming())
+        && incoming().createdAt == request.time;
+        
+      allow update: if isVerified() && isValidId(playlistId)
+        && existing().creatorId == request.auth.uid
+        && isValidPlaylist(incoming())
+        && incoming().creatorId == existing().creatorId
+        && incoming().createdAt == existing().createdAt
+        && (
+          // Action 1: Modify metadata details
+          (incoming().diff(existing()).affectedKeys().hasOnly(['name', 'description', 'coverUrl', 'coverColor'])) ||
+          // Action 2: Change track selections
+          (incoming().diff(existing()).affectedKeys().hasOnly(['trackIds'])) ||
+          // Action 3: Toggle visible state
+          (incoming().diff(existing()).affectedKeys().hasOnly(['isPublic']))
+        );
+        
+      allow delete: if isVerified() && isValidId(playlistId)
+        && existing().creatorId == request.auth.uid;
+    }
+  }
+}

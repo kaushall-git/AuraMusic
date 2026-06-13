@@ -1,0 +1,51 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile metadata, stats and music interactions",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique identifier of the user" },
+        "email": { "type": "string", "description": "Email address of the user" },
+        "displayName": { "type": "string", "description": "Name of the user" },
+        "photoURL": { "type": "string", "description": "User profile photo URL" },
+        "phoneNumber": { "type": "string", "description": "User phone number" },
+        "playlistCount": { "type": "integer", "description": "Count of playlists created by the user" },
+        "likedTracks": { "type": "array", "description": "List of liked track IDs" },
+        "recentlyPlayed": { "type": "array", "description": "List of recently played track IDs" },
+        "followedArtists": { "type": "array", "description": "List of followed artist names" },
+        "listeningMinutes": { "type": "integer", "description": "Total music listening minutes" },
+        "themeMode": { "type": "string", "enum": ["light", "dark"], "description": "User interface color scheme preference" }
+      },
+      "required": ["uid", "email", "displayName"]
+    },
+    "Playlist": {
+      "title": "Playlist",
+      "description": "User generated or AI curated music collection",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier of the playlist" },
+        "name": { "type": "string", "description": "Name of the playlist" },
+        "description": { "type": "string", "description": "Short description of the playlist" },
+        "coverUrl": { "type": "string", "description": "Optional image cover URL" },
+        "coverColor": { "type": "string", "description": "Fallback visual gradient class" },
+        "trackIds": { "type": "array", "description": "Track IDs included in this playlist" },
+        "isPublic": { "type": "boolean", "description": "Visibility to others" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "creatorId": { "type": "string", "description": "Owner UID who created it" },
+        "creatorName": { "type": "string", "description": "Owner display name" }
+      },
+      "required": ["id", "name", "trackIds", "creatorId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Stores user profiles and statistics"
+    },
+    "playlists/{playlistId}": {
+      "schema": "Playlist",
+      "description": "Stores all music playlists in the system"
+    }
+  }
+}
