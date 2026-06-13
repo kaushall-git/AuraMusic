@@ -64,15 +64,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const featuredArtistList = Array.from(new Set(TRACKS_DATABASE.map(t => t.artist))).slice(0, 4);
 
   return (
-    <div className="flex flex-col pb-36 text-white px-4 md:px-6 pt-6 overflow-y-auto w-full max-w-5xl">
+    <div className="flex flex-col pb-36 text-slate-800 dark:text-white px-4 md:px-6 pt-6 overflow-y-auto w-full max-w-5xl">
       
       {/* Dynamic Greetings header */}
-      <header className="flex items-center justify-between pb-4 mb-6 border-b border-white/5">
+      <header className="flex items-center justify-between pb-4 mb-6 border-b border-slate-200 dark:border-white/5">
         <div className="text-left">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white leading-9">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-9">
             {getGreeting()}
           </h1>
-          <p className="text-[13px] text-neutral-400 mt-1 font-medium">
+          <p className="text-[13px] text-slate-500 dark:text-neutral-400 mt-1 font-medium">
             Welcome back, <span className="text-[#FF375F] font-bold">{user?.displayName || 'Music Lover'}</span>
           </p>
         </div>
@@ -80,7 +80,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <img
             src={user.photoURL}
             alt="Profile Avatar"
-            className="h-11 w-11 rounded-full border border-white/10 shadow-md object-cover"
+            className="h-11 w-11 rounded-full border border-slate-200 dark:border-white/10 shadow-md object-cover"
           />
         ) : (
           <div className="h-11 w-11 rounded-full bg-[#FF375F]/15 flex items-center justify-center text-[#FF375F] font-black text-sm border border-[#FF375F]/20">
@@ -186,7 +186,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* Recently Played */}
       {history.length > 0 && (
         <section className="mb-8 text-left">
-          <h3 className="text-base font-black text-white tracking-tight flex items-center gap-1.5 mb-4">
+          <h3 className="text-base font-black text-slate-800 dark:text-white tracking-tight flex items-center gap-1.5 mb-4">
             <Clock className="h-5 w-5 text-neutral-400" /> Recently Played
           </h3>
           <div 
@@ -200,13 +200,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 onClick={() => playTrack(track, history)}
                 className="flex-shrink-0 w-32 cursor-pointer select-none group"
               >
-                <div className="relative h-32 w-32 rounded-[18px] overflow-hidden shadow-md bg-[#111111] border border-white/5">
+                <div className="relative h-32 w-32 rounded-[18px] overflow-hidden shadow-md bg-slate-100 dark:bg-[#111111] border border-slate-205 dark:border-white/5">
                   <img src={track.coverUrl} className="h-full w-full object-cover group-hover:scale-105 duration-350 transition-transform" />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
                     <Play className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0" fill="currentColor" />
                   </div>
                 </div>
-                <h4 className="mt-2 font-bold text-xs truncate text-white">{track.title}</h4>
+                <h4 className="mt-2 font-bold text-xs truncate text-slate-900 dark:text-white">{track.title}</h4>
                 <p className="text-[10px] text-neutral-400 truncate mt-0.5">{track.artist}</p>
               </motion.div>
             ))}
@@ -216,8 +216,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {/* Made For You */}
       <section className="mb-8 text-left">
-        <h3 className="text-base font-black tracking-tight text-white flex items-center gap-1.5 mb-4">
-          <Sparkles className="h-5 w-5 text-[#FF375F]" /> Made For You
+        <h3 className="text-base font-black tracking-tight text-slate-800 dark:text-white flex items-center gap-1.5 mb-4">
+          <Sparkles className="h-5 w-5 text-[#FF375F] animate-pulse-slow" /> Made For You
         </h3>
         <div 
           className="flex gap-4 overflow-x-auto pb-2"
@@ -230,13 +230,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
               onClick={() => playTrack(track, TRACKS_DATABASE)}
               className="flex-shrink-0 w-36 cursor-pointer group"
             >
-              <div className="relative h-36 w-36 rounded-[18px] overflow-hidden shadow-md bg-[#111111] border border-white/5">
+              <div className="relative h-36 w-36 rounded-[18px] overflow-hidden shadow-md bg-slate-100 dark:bg-[#111111] border border-slate-205 dark:border-white/5">
                 <img src={track.coverUrl} className="h-full w-full object-cover group-hover:scale-105 duration-350 transition-transform" />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
                   <Play className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0" fill="currentColor" />
                 </div>
               </div>
-              <h4 className="mt-2 font-bold text-xs truncate text-white">{track.title}</h4>
+              <h4 className="mt-2 font-bold text-xs truncate text-slate-900 dark:text-white">{track.title}</h4>
               <p className="text-[10px] text-neutral-400 truncate mt-0.5">{track.artist}</p>
             </motion.div>
           ))}
@@ -245,7 +245,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {/* Trending Now */}
       <section className="mb-8 text-left">
-        <h3 className="text-base font-black tracking-tight text-white flex items-center gap-1.5 mb-4">
+        <h3 className="text-base font-black tracking-tight text-slate-800 dark:text-white flex items-center gap-1.5 mb-4">
           <Star className="h-5 w-5 text-amber-400" /> Trending Now
         </h3>
         <div 
@@ -259,13 +259,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
               onClick={() => playTrack(track, trendingTracks)}
               className="flex-shrink-0 w-36 cursor-pointer group"
             >
-              <div className="relative h-36 w-36 rounded-[18px] overflow-hidden shadow-lg bg-[#111111] border border-white/5">
+              <div className="relative h-36 w-36 rounded-[18px] overflow-hidden shadow-lg bg-slate-100 dark:bg-[#111111] border border-slate-205 dark:border-white/5">
                 <img src={track.coverUrl} className="h-full w-full object-cover group-hover:scale-105 duration-350 transition-transform" />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
                   <Play className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0" fill="currentColor" />
                 </div>
               </div>
-              <h4 className="mt-2 font-bold text-xs truncate text-white">{track.title}</h4>
+              <h4 className="mt-2 font-bold text-xs truncate text-slate-900 dark:text-white">{track.title}</h4>
               <p className="text-[10px] text-neutral-400 truncate mt-0.5">{track.artist}</p>
             </motion.div>
           ))}
@@ -274,7 +274,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {/* New Releases Slider */}
       <section className="mb-8 text-left">
-        <h3 className="text-base font-black tracking-tight text-white flex items-center gap-1.5 mb-4">
+        <h3 className="text-base font-black tracking-tight text-slate-800 dark:text-white flex items-center gap-1.5 mb-4">
           <Flame className="h-5 w-5 text-[#FF375F]" /> New Releases
         </h3>
         <div 
@@ -288,13 +288,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
               onClick={() => playTrack(track, newReleases)}
               className="flex-shrink-0 w-36 cursor-pointer group"
             >
-              <div className="relative h-36 w-36 rounded-[18px] overflow-hidden shadow-md bg-[#111111] border border-white/5">
+              <div className="relative h-36 w-36 rounded-[18px] overflow-hidden shadow-md bg-slate-100 dark:bg-[#111111] border border-slate-205 dark:border-white/5">
                 <img src={track.coverUrl} className="h-full w-full object-cover group-hover:scale-105 duration-350 transition-transform" />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
                   <Play className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0" fill="currentColor" />
                 </div>
               </div>
-              <h4 className="mt-2.5 font-bold text-xs truncate text-white">{track.title}</h4>
+              <h4 className="mt-2.5 font-bold text-xs truncate text-slate-900 dark:text-white">{track.title}</h4>
               <p className="text-[10px] text-neutral-400 truncate mt-0.5">{track.artist}</p>
             </motion.div>
           ))}
@@ -303,7 +303,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {/* Featured Artists section */}
       <section className="mb-8 text-left">
-        <h3 className="text-base font-black tracking-tight text-white mb-3.5">
+        <h3 className="text-base font-black tracking-tight text-slate-800 dark:text-white mb-3.5">
           Artists to Follow
         </h3>
         <div className="grid grid-cols-2 gap-4">
@@ -312,13 +312,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
               whileHover={{ scale: 1.015 }}
               key={artist}
               onClick={() => onSelectArtist(artist)}
-              className="flex items-center gap-3.5 p-4 bg-white/5 border border-white/5 rounded-2xl cursor-pointer shadow-xs animate-fade-in backdrop-blur-md"
+              className="flex items-center gap-3.5 p-4 bg-slate-100/60 dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-2xl cursor-pointer shadow-xs animate-fade-in backdrop-blur-md"
             >
               <div className="h-10 w-10 rounded-full overflow-hidden bg-[#FF375F]/10 flex items-center justify-center text-[#FF375F] font-black shadow-sm border border-[#FF375F]/15">
                 {artist.charAt(0)}
               </div>
               <div className="overflow-hidden leading-tight">
-                <p className="font-extrabold text-sm truncate text-white">{artist}</p>
+                <p className="font-extrabold text-sm truncate text-slate-900 dark:text-white">{artist}</p>
                 <small className="text-[9px] text-[#FF375F] font-black uppercase tracking-wider">Top Chart</small>
               </div>
             </motion.div>
@@ -328,7 +328,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {/* Global Charts and Categories */}
       <section className="mb-2 text-left">
-        <h3 className="text-base font-black tracking-tight text-white mb-3.5">
+        <h3 className="text-base font-black tracking-tight text-slate-800 dark:text-white mb-3.5">
           Curated Genre Waves
         </h3>
         <div className="grid grid-cols-3 gap-4">
@@ -338,7 +338,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               whileTap={{ scale: 0.97 }}
               key={g}
               onClick={() => onSelectGenre(g)}
-              className="h-16 flex items-center justify-center font-black text-xs text-white rounded-2xl bg-gradient-to-tr from-neutral-900 to-neutral-950 border border-white/5 shadow-md cursor-pointer text-center px-1"
+              className="h-16 flex items-center justify-center font-black text-xs text-slate-800 dark:text-white rounded-2xl bg-gradient-to-tr from-slate-100 to-slate-200 dark:from-neutral-900 dark:to-neutral-950 border border-slate-200 dark:border-white/5 shadow-md cursor-pointer text-center px-1"
             >
               {g}
             </motion.div>

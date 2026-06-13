@@ -33,10 +33,10 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({ onExpand }) => {
     <motion.div
       initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="fixed bottom-18 left-4 right-4 z-40 max-w-xl mx-auto overflow-hidden rounded-[20px] border border-white/10 bg-neutral-950/85 shadow-[0_12px_36px_rgba(0,0,0,0.6)] backdrop-blur-xl md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[500px]"
+      className="fixed bottom-18 left-4 right-4 z-40 max-w-xl mx-auto overflow-hidden rounded-[20px] border border-gray-200/60 dark:border-white/10 bg-white/95 dark:bg-neutral-950/85 shadow-[0_12px_36px_rgba(0,0,0,0.15)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.6)] backdrop-blur-xl md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[500px]"
     >
       {/* Top micro progress track */}
-      <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-white/5">
+      <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-slate-200 dark:bg-white/5">
         <div
           className="h-full bg-[#FF375F] transition-all duration-[200ms] ease-out"
           style={{ width: `${progress}%` }}
@@ -50,7 +50,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({ onExpand }) => {
           className="flex flex-1 items-center gap-3 cursor-pointer select-none overflow-hidden h-full"
         >
           {/* Cover Art */}
-          <div className="relative h-11 w-11 flex-shrink-0 rounded-[10px] overflow-hidden bg-white/5">
+          <div className="relative h-11 w-11 flex-shrink-0 rounded-[10px] overflow-hidden bg-slate-100 dark:bg-white/5">
             <img
               src={currentTrack.coverUrl}
               alt={currentTrack.title}
@@ -63,10 +63,10 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({ onExpand }) => {
 
           {/* Title / Artist */}
           <div className="overflow-hidden leading-tight text-left">
-            <h4 className="truncate text-[13.5px] font-bold text-white">
+            <h4 className="truncate text-[13px] font-bold text-slate-900 dark:text-white">
               {currentTrack.title}
             </h4>
-            <p className="truncate text-[11.5px] font-medium text-[#FF375F] mt-0.5">
+            <p className="truncate text-[11px] font-semibold text-[#FF375F] mt-0.5">
               {currentTrack.artist}
             </p>
           </div>
@@ -78,7 +78,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({ onExpand }) => {
           <button
             onClick={() => toggleLikeTrack(currentTrack.id)}
             className={`p-1.5 hover:scale-110 active:scale-95 transition-transform duration-200 ${
-              isLiked ? 'text-[#FF375F]' : 'text-neutral-400 hover:text-white'
+              isLiked ? 'text-[#FF375F]' : 'text-slate-400 hover:text-slate-800 dark:text-neutral-400 dark:hover:text-white'
             }`}
           >
             <Heart className="h-4.5 w-4.5" fill={isLiked ? 'currentColor' : 'none'} />
@@ -87,7 +87,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({ onExpand }) => {
           {/* Play/Pause */}
           <button
             onClick={togglePlay}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow hover:scale-105 active:scale-95 transition-transform duration-200 cursor-pointer"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-white dark:bg-white dark:text-black shadow hover:scale-105 active:scale-95 transition-transform duration-200 cursor-pointer"
           >
             {isPlaying ? (
               <Pause className="h-[14px] w-[14px]" fill="currentColor" />
@@ -99,7 +99,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({ onExpand }) => {
           {/* Skip Next */}
           <button
             onClick={nextTrack}
-            className="p-1.5 text-neutral-400 hover:scale-110 active:scale-95 hover:text-white transition-all duration-200"
+            className="p-1.5 text-slate-400 hover:scale-110 active:scale-95 hover:text-slate-800 dark:text-neutral-400 dark:hover:text-white transition-all duration-200"
           >
             <SkipForward className="h-4.5 w-4.5" fill="currentColor" />
           </button>

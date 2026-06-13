@@ -28,7 +28,8 @@ import {
   Check,
   X,
   Sparkles,
-  MoreHorizontal
+  MoreHorizontal,
+  Clock
 } from 'lucide-react';
 import { useMusic } from '../contexts/MusicContext';
 import { Track } from '../types';
@@ -58,6 +59,8 @@ export const FullPlayer: React.FC<FullPlayerProps> = ({ isOpen, onClose }) => {
     likedTrackIds,
     offlineDownloadedIds,
     analyserNode,
+    sleepTimerRemaining,
+    setSleepTimer,
     togglePlay,
     nextTrack,
     prevTrack,
@@ -76,6 +79,7 @@ export const FullPlayer: React.FC<FullPlayerProps> = ({ isOpen, onClose }) => {
   const [activeLyricIndex, setActiveLyricIndex] = useState<number>(-1);
   const [isCastOpen, setIsCastOpen] = useState<boolean>(false);
   const [castSuccess, setCastSuccess] = useState<string | null>(null);
+  const [isSleepTimerOpen, setIsSleepTimerOpen] = useState<boolean>(false);
 
   // Session & UI Options
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState<boolean>(false);
@@ -602,6 +606,16 @@ export const FullPlayer: React.FC<FullPlayerProps> = ({ isOpen, onClose }) => {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
+  const formatRemainingTime = (seconds: number): string => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    if (h > 0) {
+      return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
   const isLiked = currentTrack ? likedTrackIds.includes(currentTrack.id) : false;
   const isDownloaded = currentTrack ? offlineDownloadedIds.includes(currentTrack.id) : false;
 
@@ -759,6 +773,16 @@ export const FullPlayer: React.FC<FullPlayerProps> = ({ isOpen, onClose }) => {
                         {currentTrack.artist}
                       </p>
                       <span className="text-[10px] text-white/40 uppercase font-black tracking-widest mt-1 block">{currentTrack.genre}</span>
+                      {sleepTimerRemaining !== null && (
+                        <button
+                          onClick={() => setIsSleepTimerOpen(true)}
+                          className="inline-flex items-center gap-1.5 mt-2.5 px-3 py-1.5 bg-[#FF375F]/15 hover:bg-[#FF375F]/25 active:scale-95 transition-all text-xs font-bold rounded-lg text-[#FF375F] border border-[#FF375F]/20 cursor-pointer"
+                          title="Manage Sleep Timer"
+                        >
+                          <Clock className="h-3.5 w-3.5 animate-pulse" />
+                          Ends in {formatRemainingTime(sleepTimerRemaining)}
+                        </button>
+                      )}
                     </div>
 
                     <motion.button
@@ -1315,11 +1339,116 @@ export const FullPlayer: React.FC<FullPlayerProps> = ({ isOpen, onClose }) => {
                       <span>Copy Direct Track Link</span>
                       <Copy className="h-5 w-5 text-emerald-400" />
                     </button>
+
+                    <button
+                      onClick={() => {
+                        setIsMoreMenuOpen(false);
+                        setIsSleepTimerOpen(true);
+                      }}
+                      className="w-full py-4 px-4 rounded-2xl hover:bg-white/5 text-left text-sm font-bold flex items-center justify-between transition-colors cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>Sleep Timer</span>
+                        {sleepTimerRemaining !== null && (
+                          <span className="text-[10px] bg-[#FF375F] text-white py-0.5 px-2 rounded-full font-black animate-pulse">
+                            {formatRemainingTime(sleepTimerRemaining)}
+                          </span>
+                        )}
+                      </span>
+                      <Clock className="h-5 w-5 text-amber-400" />
+                    </button>
                   </div>
 
                   <button
                     onClick={() => setIsMoreMenuOpen(false)}
                     className="mt-6 w-full py-4 bg-white/5 hover:bg-white/10 active:scale-98 rounded-2xl text-sm font-bold uppercase tracking-wider cursor-pointer transition-all"
+                  >
+                    Cancel
+                  </button>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
+
+          {/* Sleep Timer Setup sliding menu / modal */}
+          <AnimatePresence>
+            {isSleepTimerOpen && (
+              <div className="fixed inset-0 z-55 flex items-end justify-center bg-black/60 backdrop-blur-sm">
+                <div className="absolute inset-0" onClick={() => setIsSleepTimerOpen(false)} />
+                
+                <motion.div
+                  initial={{ y: '100%' }}
+                  animate={{ y: 0 }}
+                  exit={{ y: '100%' }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                  className="relative z-10 w-full max-w-md rounded-t-[32px] bg-[#121216]/98 border-t border-white/10 p-6 pb-12 shadow-2xl text-white select-none backdrop-blur-xl"
+                >
+                  <div className="mx-auto w-12 h-1.5 bg-white/20 rounded-full mb-6" />
+                  
+                  <div className="text-center mb-6">
+                    <Clock className="mx-auto h-8 w-8 text-[#FF375F] mb-2 animate-pulse" />
+                    <h3 className="font-extrabold text-xl text-white">Sleep Timer</h3>
+                    <p className="text-xs text-white/50 mt-1">Automatically pause audio playback when the countdown ends.</p>
+                  </div>
+
+                  {sleepTimerRemaining !== null && (
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-4 mb-6 text-center">
+                      <span className="text-[11px] text-white/40 uppercase tracking-widest font-black block">Active Timer</span>
+                      <span className="text-2xl font-black text-[#FF375F] block mt-1.5 font-mono">
+                        {formatRemainingTime(sleepTimerRemaining)} remaining
+                      </span>
+                      <button
+                        onClick={() => {
+                          setSleepTimer(null);
+                          setCastSuccess("Sleep timer turned off");
+                          setTimeout(() => setCastSuccess(null), 2000);
+                        }}
+                        className="mt-3.5 px-4 py-2 bg-red-500/10 hover:bg-red-500/15 border border-red-500/20 rounded-xl text-xs font-bold text-red-400 cursor-pointer active:scale-95 transition-all outline-none"
+                      >
+                        Turn Off Timer
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-3 gap-3 mb-6">
+                    {[5, 15, 30, 45, 60].map((mins) => (
+                      <button
+                        key={mins}
+                        onClick={() => {
+                          setSleepTimer(mins);
+                          setIsSleepTimerOpen(false);
+                          setCastSuccess(`Timer set for ${mins} minutes`);
+                          setTimeout(() => setCastSuccess(null), 2500);
+                        }}
+                        className="py-3 px-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl text-sm font-bold cursor-pointer hover:border-[#FF375F]/30 active:scale-95 transition-all text-center"
+                      >
+                        {mins} mins
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => {
+                        const customMins = prompt("Enter custom sleep timer duration (in minutes):", "90");
+                        if (customMins !== null) {
+                          const parsed = parseInt(customMins, 10);
+                          if (!isNaN(parsed) && parsed > 0) {
+                            setSleepTimer(parsed);
+                            setIsSleepTimerOpen(false);
+                            setCastSuccess(`Timer set for ${parsed} minutes`);
+                            setTimeout(() => setCastSuccess(null), 2500);
+                          } else {
+                            alert("Please enter a valid positive number.");
+                          }
+                        }
+                      }}
+                      className="py-3 px-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-2xl text-sm font-bold cursor-pointer hover:border-[#FF375F]/30 active:scale-95 transition-all text-center text-[#FF375F]"
+                    >
+                      Custom...
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => setIsSleepTimerOpen(false)}
+                    className="w-full py-4 bg-white/5 hover:bg-white/10 active:scale-98 rounded-2xl text-sm font-bold uppercase tracking-wider cursor-pointer transition-all"
                   >
                     Cancel
                   </button>

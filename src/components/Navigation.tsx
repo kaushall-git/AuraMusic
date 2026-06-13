@@ -21,7 +21,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
   ] as const;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/5 bg-black/80 py-2 pb-safe backdrop-blur-xl shadow-lg">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200/50 dark:border-white/5 bg-white/85 dark:bg-black/80 py-2 pb-safe backdrop-blur-xl shadow-lg">
       <div className="mx-auto flex h-14 w-full max-w-5xl justify-around px-2 md:px-12">
         {navItems.map((item) => {
           const IconComponent = item.icon;
@@ -33,7 +33,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
               className={`relative flex flex-col items-center justify-center py-1 px-3 transition-all duration-350 cursor-pointer ${
                 isActive
                   ? 'text-[#FF375F] scale-105 font-bold'
-                  : 'text-neutral-400 hover:text-white'
+                  : 'text-slate-500 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white'
               }`}
             >
               <div className="relative flex flex-col items-center">

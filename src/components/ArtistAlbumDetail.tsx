@@ -6,6 +6,7 @@
 import React from 'react';
 import { Play, Shuffle, Clock, ChevronLeft, Plus, Trash2, Music, Check } from 'lucide-react';
 import { useMusic } from '../contexts/MusicContext';
+import { useAuth } from '../contexts/AuthContext';
 import { Track, Playlist } from '../types';
 
 interface ArtistAlbumDetailProps {
@@ -15,6 +16,7 @@ interface ArtistAlbumDetailProps {
 }
 
 export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, entityId, onBack }) => {
+  const { user } = useAuth();
   const {
     playlists,
     playTrack,
@@ -90,10 +92,10 @@ export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, enti
   };
 
   return (
-    <div className="fixed inset-y-0 left-0 right-0 z-30 flex flex-col bg-[#000000] text-white overflow-y-auto pb-36 w-full max-w-5xl mx-auto md:rounded-[32px] md:border md:border-white/5 transition-all duration-300 shadow-2xl">
+    <div className="fixed inset-y-0 left-0 right-0 z-30 flex flex-col bg-[#fafafa] dark:bg-[#000000] text-slate-800 dark:text-white overflow-y-auto pb-36 w-full max-w-5xl mx-auto md:rounded-[32px] md:border md:border-slate-205 dark:md:border-white/5 transition-all duration-300 shadow-2xl">
       
       {/* Absolute floating Header bar */}
-      <div className="sticky top-0 z-40 bg-black/80 backdrop-blur px-4 py-4 flex items-center justify-between border-b border-white/5">
+      <div className="sticky top-0 z-40 bg-slate-100/90 dark:bg-black/80 backdrop-blur px-4 py-4 flex items-center justify-between border-b border-slate-200 dark:border-white/5">
         <button
           onClick={onBack}
           className="flex items-center gap-1.5 text-xs font-semibold text-[#FF375F] cursor-pointer"
@@ -104,7 +106,7 @@ export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, enti
         {type === 'playlist' && entityId.startsWith('pl-') && !entityId.includes('pl-ai-') ? (
           <button
             onClick={handleDeleteThisPlaylist}
-            className="text-red-500 p-1.5 rounded-full hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
+            className="text-red-500 p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/5 active:scale-95 transition-all cursor-pointer"
             title="Delete Playlist"
           >
             <Trash2 className="h-4.5 w-4.5" />
@@ -115,7 +117,7 @@ export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, enti
       </div>
 
       {/* Hero Header Area */}
-      <div className="p-6 pt-8 flex flex-col items-center border-b border-white/5">
+      <div className="p-6 pt-8 flex flex-col items-center border-b border-slate-200 dark:border-white/5">
         {coverUrl ? (
           <div className="h-40 w-40 rounded-2xl overflow-hidden shadow-2xl relative">
             <img src={coverUrl} alt={title} className="h-full w-full object-cover" />
@@ -128,8 +130,32 @@ export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, enti
 
         {/* Info */}
         <div className="mt-5 text-center px-4 leading-tight">
-          <h2 className="text-2xl font-bold tracking-tight text-white">{title}</h2>
-          <p className="mt-1.5 text-xs font-medium text-[#FF375F] uppercase tracking-wider">{metaInfo}</p>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{title}</h2>
+          {type === 'playlist' ? (() => {
+            const pl = playlists.find(p => p.id === entityId);
+            if (!pl) return <p className="mt-1.5 text-xs font-medium text-[#FF375F] uppercase tracking-wider">{metaInfo}</p>;
+            const isUserPlaylist = pl.creatorId === user?.uid;
+            const playlistCreatorPhoto = isUserPlaylist 
+              ? user?.photoURL 
+              : pl.creatorName.includes('AI') 
+                ? `https://api.dicebear.com/7.x/bottts/svg?seed=AuraAI` 
+                : `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(pl.creatorName)}`;
+            return (
+              <div className="mt-2.5 flex items-center justify-center gap-2">
+                <img
+                  src={playlistCreatorPhoto}
+                  alt={pl.creatorName}
+                  className="h-6 w-6 rounded-full border border-slate-200 dark:border-white/10 shadow-sm object-cover bg-slate-100 dark:bg-neutral-900/60"
+                  referrerPolicy="no-referrer"
+                />
+                <span className="text-xs font-semibold text-slate-600 dark:text-neutral-300">
+                  Curated by <span className="text-[#FF375F] font-bold">{pl.creatorName}</span> • {tracks.length} track{tracks.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+            );
+          })() : (
+            <p className="mt-1.5 text-xs font-medium text-[#FF375F] uppercase tracking-wider">{metaInfo}</p>
+          )}
           <p className="mt-2 text-sm text-neutral-400 max-w-xs">{description}</p>
         </div>
 
@@ -144,13 +170,13 @@ export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, enti
             </button>
             <button
               onClick={() => handlePlayAll(true)}
-              className="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white font-bold py-3 px-5 rounded-full active:scale-95 transition-all text-sm cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-white border border-slate-200 dark:border-transparent font-bold py-3 px-5 rounded-full active:scale-95 transition-all text-sm cursor-pointer"
             >
               <Shuffle className="h-4.5 w-4.5" /> Shuffle
             </button>
           </div>
         ) : (
-          <div className="mt-6 text-xs text-neutral-400 italic p-4 bg-white/5 rounded-xl leading-relaxed text-center max-w-xs">
+          <div className="mt-6 text-xs text-neutral-400 italic p-4 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-transparent rounded-xl leading-relaxed text-center max-w-xs">
             To build your playlist, click on Search, find tracks of your choice, and tap the Add option next to them!
           </div>
         )}
@@ -170,8 +196,8 @@ export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, enti
           return (
             <div
               key={`${track.id}-${index}`}
-              className={`group flex items-center justify-between p-3.5 rounded-[18px] hover:bg-white/5 border border-transparent transition-all duration-200 cursor-pointer ${
-                isCurrentActive ? 'bg-white/10' : ''
+              className={`group flex items-center justify-between p-3.5 rounded-[18px] hover:bg-slate-200/50 dark:hover:bg-white/5 border border-transparent transition-all duration-150 cursor-pointer ${
+                isCurrentActive ? 'bg-slate-200/60 dark:bg-white/10' : ''
               }`}
               onClick={() => playTrack(track, tracks)}
             >
@@ -194,7 +220,7 @@ export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, enti
                 
                 <div className="overflow-hidden leading-tight text-left">
                   <p className={`font-bold text-sm truncate ${
-                    isCurrentActive ? 'text-[#FF375F]' : 'text-white'
+                    isCurrentActive ? 'text-[#FF375F]' : 'text-slate-900 dark:text-white'
                   }`}>
                     {track.title}
                   </p>
@@ -210,8 +236,8 @@ export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, enti
                     e.stopPropagation();
                     toggleLikeTrack(track.id);
                   }}
-                  className={`p-1.5 rounded-full hover:bg-white/5 transition-colors ${
-                    isLiked ? 'text-[#FF375F]' : 'text-neutral-500 hover:text-white'
+                  className={`p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/5 transition-colors ${
+                    isLiked ? 'text-[#FF375F]' : 'text-neutral-500 hover:text-slate-800 dark:hover:text-white'
                   }`}
                 >
                   <Plus className={`h-4.5 w-4.5 transition-transform ${isLiked ? 'rotate-45 text-[#FF375F] stroke-[3px]' : ''}`} />
@@ -224,7 +250,7 @@ export const ArtistAlbumDetail: React.FC<ArtistAlbumDetailProps> = ({ type, enti
                       e.stopPropagation();
                       handleRemoveTrack(track.id);
                     }}
-                    className="p-1.5 rounded-full text-neutral-500 hover:text-red-500 hover:bg-white/5 transition-all cursor-pointer"
+                    className="p-1.5 rounded-full text-neutral-500 hover:text-red-500 hover:bg-slate-200 dark:hover:bg-white/5 transition-all cursor-pointer"
                     title="Remove Song"
                   >
                     <Trash2 className="h-4.5 w-4.5" />

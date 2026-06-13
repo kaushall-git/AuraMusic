@@ -232,13 +232,13 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
   const displayedResults = getFilteredResults();
 
   return (
-    <div className="flex flex-col pb-36 text-white px-4 md:px-6 pt-6 overflow-y-auto w-full max-w-5xl">
+    <div className="flex flex-col pb-36 text-slate-800 dark:text-white px-4 md:px-6 pt-6 overflow-y-auto w-full max-w-5xl">
       
       {/* Search title header section */}
-      <header className="flex items-center justify-between pb-3.5 mb-6 border-b border-white/5">
+      <header className="flex items-center justify-between pb-3.5 mb-6 border-b border-slate-200 dark:border-white/5">
         <div className="text-left">
-          <h1 className="text-3xl font-black tracking-tight text-white leading-9">Search</h1>
-          <p className="text-xs text-neutral-400 mt-1 font-semibold">
+          <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-9">Search</h1>
+          <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1 font-semibold">
             Discover and play full streaming audio
           </p>
         </div>
@@ -255,12 +255,12 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
             placeholder={isInternetSearch ? "Search artists, tracks, lofi remixes..." : "Search local tracks, artists, genres..."}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full rounded-2xl bg-white/5 border border-white/5 pl-11 pr-10 py-3.5 text-sm outline-none focus:ring-2 focus:ring-[#FF375F]/15 focus:border-[#FF375F]/50 transition-all text-white font-sans text-left"
+            className="w-full rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 pl-11 pr-10 py-3.5 text-sm outline-none focus:ring-2 focus:ring-[#FF375F]/15 focus:border-[#FF375F]/50 transition-all text-slate-800 dark:text-white font-sans text-left"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-800 dark:hover:text-white"
             >
               <X className="h-4.5 w-4.5" />
             </button>
@@ -273,7 +273,7 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
           className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-all cursor-pointer shadow-xs ${
             isVoiceListening
               ? 'bg-[#FF375F] text-white animate-pulse'
-              : 'bg-white/5 border border-white/5 text-[#FF375F] hover:bg-white/10'
+              : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-[#FF375F] hover:bg-slate-200 dark:hover:bg-white/10'
           }`}
           title="Voice Search"
         >
@@ -282,14 +282,14 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
       </div>
 
       {/* Dynamic Source Selector */}
-      <div className="flex items-center justify-between mb-5 bg-white/5 p-3 rounded-2xl border border-white/5">
+      <div className="flex items-center justify-between mb-5 bg-slate-100/60 dark:bg-white/5 p-3 rounded-2xl border border-slate-200 dark:border-white/5">
         <div className="flex items-center gap-2">
           <Globe className={`h-4.5 w-4.5 ${isInternetSearch ? 'text-[#FF375F] animate-pulse' : 'text-slate-400'}`} />
           <div className="text-left">
             <span className="text-[11px] font-extrabold text-[#FF375F] block uppercase tracking-wider">
               {isInternetSearch ? 'Full-Length Tracks' : 'Internal Catalog'}
             </span>
-            <small className="text-[10px] text-neutral-400 font-medium">
+            <small className="text-[10px] text-slate-500 dark:text-neutral-400 font-medium">
               {isInternetSearch ? 'Streaming via global Audius nodes' : 'Play standard built-in tracks'}
             </small>
           </div>
@@ -300,7 +300,7 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
             setQuery('');
           }}
           className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-            isInternetSearch ? 'bg-[#FF375F]' : 'bg-white/10'
+            isInternetSearch ? 'bg-[#FF375F]' : 'bg-slate-200 dark:bg-white/10'
           }`}
         >
           <span
@@ -327,7 +327,7 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
               className={`rounded-full px-4.5 py-2 text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer ${
                 activeFilter === filter
                   ? 'bg-[#FF375F] text-white shadow shadow-rose-500/20'
-                  : 'bg-white/5 border border-white/5 text-neutral-300 hover:bg-white/10'
+                  : 'bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-neutral-300 hover:bg-slate-200 dark:hover:bg-white/10'
               }`}
             >
               {filter}
@@ -351,24 +351,24 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
               layout
               whileHover={{ x: 3 }}
               key={track.id}
-              className="group rounded-2xl bg-white/5 border border-white/5 p-3.5 flex items-center justify-between cursor-pointer"
+              className="group rounded-2xl bg-slate-100/60 dark:bg-white/5 border border-slate-200 dark:border-white/5 p-3.5 flex items-center justify-between cursor-pointer"
               onClick={() => playTrack(track, displayedResults)}
             >
               <div className="flex items-center gap-3.5 overflow-hidden">
                 <img src={track.coverUrl} className="h-12 w-12 rounded-[10px] object-cover shadow-sm" />
                 <div className="overflow-hidden leading-tight">
-                  <h4 className="font-extrabold text-sm text-white truncate group-hover:text-[#FF375F] transition-colors">
+                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white truncate group-hover:text-[#FF375F] transition-colors">
                     {track.title}
                   </h4>
-                  <p className="text-xs font-semibold text-neutral-400 truncate mt-1">{track.artist}</p>
-                  <p className="text-[9px] font-bold text-neutral-500 truncate mt-1 uppercase tracking-widest">{track.genre}</p>
+                  <p className="text-xs font-semibold text-slate-500 dark:text-neutral-400 truncate mt-1">{track.artist}</p>
+                  <p className="text-[9px] font-bold text-slate-400 dark:text-neutral-500 truncate mt-1 uppercase tracking-widest">{track.genre}</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                 <button
                   onClick={() => playTrack(track, [track])}
-                  className="p-2.5 rounded-full hover:bg-white/10 text-[#FF375F]"
+                  className="p-2.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/10 text-[#FF375F]"
                 >
                   <Play className="h-4.5 w-4.5 fill-current" />
                 </button>
@@ -377,7 +377,7 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
                     setSelectedTrackForPlaylist(track);
                     setShowPlaylistMenu(true);
                   }}
-                  className="p-2.5 rounded-full hover:bg-white/10 text-neutral-400 hover:text-[#FF375F]"
+                  className="p-2.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/10 text-slate-400 dark:text-neutral-400 hover:text-[#FF375F]"
                 >
                   <Plus className="h-4.5 w-4.5 stroke-[2.5]" />
                 </button>
@@ -386,8 +386,8 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
           ))}
 
           {!isSearchingInternet && displayedResults.length === 0 && (
-            <div className="text-center py-20 bg-white/5 border border-white/5 rounded-3xl">
-              <p className="text-sm text-neutral-400 font-bold">
+            <div className="text-center py-20 bg-slate-100/60 dark:bg-white/5 border border-slate-205 dark:border-white/5 rounded-3xl">
+              <p className="text-sm text-slate-500 dark:text-neutral-400 font-bold">
                 No matching tracks found for "{query}"
               </p>
               <small className="text-xs text-neutral-500 mt-1 block">Try adjusting your spelling or filters</small>
@@ -397,7 +397,7 @@ export const SearchView: React.FC<SearchViewProps> = ({ onSelectArtist, onSelect
       ) : (
         /* Categories list */
         <div className="text-left">
-          <h2 className="text-lg font-extrabold text-white tracking-tight mb-4 flex items-center gap-1.5">
+          <h2 className="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 flex items-center gap-1.5">
             <Compass className="h-5 w-5 text-[#FF375F]" /> Browse All Categories
           </h2>
           <div className="grid grid-cols-2 gap-3.5">

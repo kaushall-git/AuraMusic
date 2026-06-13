@@ -76,13 +76,13 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col pb-36 text-white px-4 md:px-6 pt-6 overflow-y-auto w-full max-w-5xl">
+    <div className="flex flex-col pb-36 text-slate-800 dark:text-white px-4 md:px-6 pt-6 overflow-y-auto w-full max-w-5xl">
       
       {/* Title Header */}
-      <header className="flex items-center justify-between pb-3.5 mb-6 border-b border-white/5">
+      <header className="flex items-center justify-between pb-3.5 mb-6 border-b border-slate-200 dark:border-white/5">
         <div className="text-left">
-          <h1 className="text-3xl font-black tracking-tight text-white leading-9">Browse</h1>
-          <p className="text-xs text-neutral-400 mt-1 font-semibold">
+          <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-9">Browse</h1>
+          <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1 font-semibold">
             Curated and tailored hit updates
           </p>
         </div>
@@ -143,21 +143,21 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
       {/* 2. Top Charts section with premium styling */}
       <section className="mb-6">
         <div className="flex items-center justify-between mb-3.5">
-          <h3 className="text-base font-black tracking-tight flex items-center gap-1.5 text-white">
+          <h3 className="text-base font-black tracking-tight flex items-center gap-1.5 text-slate-800 dark:text-white">
             <Trophy className="h-5 w-5 text-amber-500" /> Apple Top Charts
           </h3>
           <span className="text-xs text-[#FF375F] font-bold flex items-center cursor-pointer hover:underline">
             See All <ChevronRight className="h-4 w-4" />
           </span>
         </div>
-
+ 
         <div className="space-y-3">
           {hotTracks.map((track, i) => (
             <motion.div
               key={track.id}
               whileHover={{ x: 4 }}
               onClick={() => playTrack(track, hotTracks)}
-              className="group flex items-center justify-between p-3.5 rounded-2xl bg-white/5 border border-white/5 cursor-pointer shadow-xs backdrop-blur-md"
+              className="group flex items-center justify-between p-3.5 rounded-2xl bg-slate-100/60 dark:bg-white/5 border border-slate-200 dark:border-white/5 cursor-pointer shadow-xs backdrop-blur-md"
             >
               <div className="flex items-center gap-3.5 overflow-hidden">
                 {/* Ranking number */}
@@ -175,7 +175,7 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
                 </div>
                 {/* Track titles */}
                 <div className="overflow-hidden leading-tight text-left">
-                  <h4 className="font-bold text-sm truncate text-white">
+                  <h4 className="font-bold text-sm truncate text-slate-900 dark:text-white">
                     {track.title}
                   </h4>
                   <p className="text-xs text-neutral-400 mt-1 truncate">
@@ -183,13 +183,13 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
                   </p>
                 </div>
               </div>
-
+ 
               {/* Tag/Metadata */}
               <div className="flex items-center gap-3 pl-2 flex-shrink-0">
-                <span className="text-[9.5px] bg-white/10 text-neutral-300 px-2.5 py-1 rounded-sm font-black uppercase tracking-wider font-sans border border-white/5">
+                <span className="text-[9.5px] bg-slate-200/50 dark:bg-white/10 text-slate-600 dark:text-neutral-300 px-2.5 py-1 rounded-sm font-black uppercase tracking-wider font-sans border border-slate-200 dark:border-white/5">
                   {track.plays >= 100000 ? `${(track.plays / 1000).toFixed(0)}K plays` : track.genre}
                 </span>
-                <button className="text-neutral-400 hover:text-white p-1">
+                <button className="text-neutral-400 hover:text-slate-800 dark:hover:text-white p-1">
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
@@ -201,14 +201,14 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
       {/* 3. New Releases Horizontal Scroll */}
       <section className="mb-6">
         <div className="flex items-center justify-between mb-3.5">
-          <h3 className="text-base font-black tracking-tight flex items-center gap-1.5 text-white">
+          <h3 className="text-base font-black tracking-tight flex items-center gap-1.5 text-slate-800 dark:text-white">
             <Flame className="h-5 w-5 text-[#FF375F]" /> New on Aura Music
           </h3>
           <span className="text-xs text-[#FF375F] font-bold flex items-center cursor-pointer hover:underline">
             Browse All <ChevronRight className="h-4 w-4" />
           </span>
         </div>
-
+ 
         <div className="flex gap-4 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
           {[...TRACKS_DATABASE].reverse().map((track) => (
             <motion.div
@@ -217,13 +217,13 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
               onClick={() => playTrack(track, TRACKS_DATABASE)}
               className="flex-shrink-0 w-36 cursor-pointer group"
             >
-              <div className="relative h-36 w-36 rounded-[18px] overflow-hidden shadow-sm bg-neutral-900 border border-white/5">
+              <div className="relative h-36 w-36 rounded-[18px] overflow-hidden shadow-sm bg-slate-100 dark:bg-[#111111] border border-slate-200 dark:border-white/5">
                 <img src={track.coverUrl} className="h-full w-full object-cover transition-transform duration-350 group-hover:scale-[1.04]" />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
                   <Play className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-all" fill="currentColor" />
                 </div>
               </div>
-              <h4 className="mt-2.5 font-bold text-xs truncate text-white">
+              <h4 className="mt-2.5 font-bold text-xs truncate text-slate-900 dark:text-white">
                 {track.title}
               </h4>
               <p className="text-[10px] text-neutral-400 truncate mt-0.5">
@@ -236,7 +236,7 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
 
       {/* 4. Curated Mood Carousels */}
       <section className="mb-2">
-        <h3 className="text-base font-black tracking-tight mb-3.5 text-white flex items-center gap-1.5 text-left">
+        <h3 className="text-base font-black tracking-tight mb-3.5 text-slate-800 dark:text-white flex items-center gap-1.5 text-left">
           <Sparkles className="h-5 w-5 text-[#FF375F]" /> Curated Audio Stations
         </h3>
         <div className="grid grid-cols-2 gap-4">
@@ -246,13 +246,13 @@ export const BrowseView: React.FC<BrowseViewProps> = ({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => onSelectGenre(cat.genre)}
-              className="flex flex-col p-5 rounded-2xl border border-white/5 bg-white/5 cursor-pointer shadow-xs text-left backdrop-blur-md"
+              className="flex flex-col p-5 rounded-2xl border border-slate-200 dark:border-white/5 bg-slate-100/60 dark:bg-white/5 cursor-pointer shadow-xs text-left backdrop-blur-md"
             >
               <div className={`h-10 w-10 text-white rounded-xl bg-gradient-to-tr ${cat.coverColor} flex items-center justify-center shadow-md border border-white/10`}>
                 <Disc className="h-5 w-5 animate-spin-slow" />
               </div>
-              <h4 className="mt-3 font-bold text-sm tracking-tight text-white">{cat.name}</h4>
-              <p className="text-[10px] text-neutral-400 leading-normal mt-1 line-clamp-2">
+              <h4 className="mt-3 font-bold text-sm tracking-tight text-slate-900 dark:text-white">{cat.name}</h4>
+              <p className="text-[10px] text-slate-500 dark:text-neutral-400 leading-normal mt-1 line-clamp-2">
                 {cat.desc}
               </p>
             </motion.div>

@@ -56,11 +56,11 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col pb-36 text-white px-4 md:px-6 pt-6 overflow-y-auto w-full max-w-5xl">
-      <header className="flex items-center justify-between pb-3.5 mb-6 border-b border-white/5">
+    <div className="flex flex-col pb-36 text-slate-800 dark:text-white px-4 md:px-6 pt-6 overflow-y-auto w-full max-w-5xl">
+      <header className="flex items-center justify-between pb-3.5 mb-6 border-b border-slate-200 dark:border-white/5">
         <div className="text-left">
-          <h1 className="text-3xl font-black tracking-tight text-white leading-9">Library</h1>
-          <p className="text-xs text-neutral-400 mt-1 font-semibold">
+          <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-9">Library</h1>
+          <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1 font-semibold">
             Your personal music archive and stations
           </p>
         </div>
@@ -78,14 +78,14 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
         <motion.div
           whileTap={{ scale: 0.98 }}
           onClick={onSelectLibraryLikes}
-          className="rounded-[18px] border border-white/5 bg-white/5 p-4 hover:scale-[1.01] transition-all duration-200 cursor-pointer flex items-center gap-4 shadow-xs"
+          className="rounded-[18px] border border-slate-200 dark:border-white/5 bg-slate-100/60 dark:bg-white/5 p-4 hover:scale-[1.01] transition-all duration-200 cursor-pointer flex items-center gap-4 shadow-xs"
         >
           <div className="h-11 w-11 rounded-xl bg-[#FF375F] flex items-center justify-center text-white shadow-md shadow-[#FF375F]/10 flex-shrink-0">
             <Heart className="h-5.5 w-5.5" fill="currentColor" />
           </div>
           <div className="overflow-hidden">
-            <h4 className="font-extrabold text-sm tracking-tight text-white truncate">Liked Songs</h4>
-            <span className="text-[11px] text-neutral-400 mt-0.5 block font-bold">
+            <h4 className="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white truncate">Liked Songs</h4>
+            <span className="text-[11px] text-slate-500 dark:text-neutral-400 mt-0.5 block font-bold">
               {likedTrackIds.length} Song{likedTrackIds.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -94,14 +94,14 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
         {/* Offline downloaded track container */}
         <motion.div
           whileTap={{ scale: 0.98 }}
-          className="rounded-[18px] border border-white/5 bg-white/5 p-4 hover:scale-[1.01] transition-all duration-200 cursor-pointer flex items-center gap-4 shadow-xs"
+          className="rounded-[18px] border border-slate-200 dark:border-white/5 bg-slate-100/60 dark:bg-white/5 p-4 hover:scale-[1.01] transition-all duration-200 cursor-pointer flex items-center gap-4 shadow-xs"
         >
           <div className="h-11 w-11 rounded-xl bg-[#059669] flex items-center justify-center text-white shadow-md shadow-emerald-500/10 flex-shrink-0">
             <FileDown className="h-5.5 w-5.5" />
           </div>
           <div className="overflow-hidden">
-            <h4 className="font-extrabold text-sm tracking-tight text-white truncate">Downloads</h4>
-            <span className="text-[10px] text-emerald-400 font-extrabold mt-1 block uppercase tracking-wider">
+            <h4 className="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white truncate">Downloads</h4>
+            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-extrabold mt-1 block uppercase tracking-wider">
               {offlineDownloadedIds.length} Offline
             </span>
           </div>
@@ -111,14 +111,14 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
         <motion.div
           whileTap={{ scale: 0.98 }}
           onClick={onOpenAiStudio}
-          className="rounded-[18px] border border-purple-500/15 bg-purple-950/5 p-4 hover:scale-[1.01] transition-all duration-200 cursor-pointer flex items-center gap-4 shadow-xs"
+          className="rounded-[18px] border border-purple-200 dark:border-purple-500/15 bg-purple-50/70 dark:bg-purple-950/5 p-4 hover:scale-[1.01] transition-all duration-200 cursor-pointer flex items-center gap-4 shadow-xs"
         >
           <div className="h-11 w-11 rounded-xl bg-gradient-to-tr from-[#FF375F] to-[#7C3AED] flex items-center justify-center text-white shadow-md shadow-purple-500/10 flex-shrink-0">
             <Sparkles className="h-5.5 w-5.5" />
           </div>
           <div className="overflow-hidden">
-            <h4 className="font-extrabold text-sm tracking-tight text-white truncate">Aura AI Lab</h4>
-            <span className="text-[10px] text-purple-400 font-extrabold mt-1 block uppercase tracking-wider">
+            <h4 className="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white truncate">Aura AI Lab</h4>
+            <span className="text-[10px] text-purple-600 dark:text-purple-400 font-extrabold mt-1 block uppercase tracking-wider">
               Voice & Music Studio
             </span>
           </div>
@@ -165,7 +165,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                 whileHover={{ scale: 1.005 }}
                 key={pl.id}
                 onClick={() => onSelectPlaylist(pl.id)}
-                className="group flex items-center justify-between p-3.5 bg-white/5 border border-white/5 rounded-[18px] cursor-pointer transition-all duration-200 shadow-xs"
+                className="group flex items-center justify-between p-3.5 bg-slate-100/60 dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-[18px] cursor-pointer transition-all duration-200 shadow-xs"
               >
                 <div className="flex items-center gap-3.5 overflow-hidden text-left">
                   {/* Fallback gradients */}
@@ -181,7 +181,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                   </div>
 
                   <div className="overflow-hidden leading-tight">
-                    <h4 className="font-extrabold text-sm text-white truncate group-hover:text-[#FF375F] transition-colors">
+                    <h4 className="font-extrabold text-sm text-slate-900 dark:text-white truncate group-hover:text-[#FF375F] transition-colors">
                       {pl.name}
                     </h4>
                     <p className="text-xs text-neutral-400 truncate mt-0.5 max-w-[200px]">{pl.description}</p>
@@ -208,7 +208,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                 whileHover={{ scale: 1.02 }}
                 key={pl.id}
                 onClick={() => onSelectPlaylist(pl.id)}
-                className="flex flex-col p-4 bg-white/5 border border-white/5 rounded-[18px] cursor-pointer transition-all duration-200 shadow-xs text-left group"
+                className="flex flex-col p-4 bg-slate-100/60 dark:bg-white/5 border border-slate-200 dark:border-white/5 rounded-[18px] cursor-pointer transition-all duration-200 shadow-xs text-left group"
               >
                 <div className={`h-24 w-full rounded-xl bg-gradient-to-tr ${pl.coverColor || 'from-indigo-600 to-rose-500'} flex items-center justify-center text-white shadow-md relative overflow-hidden`}>
                   {isAi ? (
@@ -220,7 +220,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                     <div className="absolute top-0 right-0 bg-yellow-500 text-[8px] font-black text-black py-0.5 px-2 uppercase tracking-widest rounded-bl">AI</div>
                   )}
                 </div>
-                <h4 className="mt-3 font-extrabold text-sm text-white truncate group-hover:text-[#FF375F]">
+                <h4 className="mt-3 font-extrabold text-sm text-slate-900 dark:text-white truncate group-hover:text-[#FF375F]">
                   {pl.name}
                 </h4>
                 <p className="text-[10px] text-neutral-400 truncate mt-0.5 leading-snug">{pl.description}</p>
@@ -235,9 +235,9 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
       )}
 
       {playlists.length === 0 && (
-        <div className="text-center py-20 border border-dashed border-white/5 rounded-3xl bg-white/5 text-left px-6">
+        <div className="text-center py-20 border border-dashed border-slate-200 dark:border-white/5 rounded-3xl bg-slate-100/60 dark:bg-white/5 text-left px-6">
           <Music className="h-10 w-10 text-[#FF375F] bg-[#FF375F]/10 p-2 rounded-xl mx-auto mb-4" />
-          <h5 className="font-extrabold text-sm text-white text-center">Your Library is Empty</h5>
+          <h5 className="font-extrabold text-sm text-slate-900 dark:text-white text-center">Your Library is Empty</h5>
           <p className="text-xs text-neutral-400 text-center max-w-xs mx-auto mt-1 leading-normal font-sans">
             Tap the plus Create button in the header, input a name, choose an artwork color, and craft your first playlist!
           </p>

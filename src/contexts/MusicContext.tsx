@@ -70,6 +70,10 @@ interface MusicContextType {
 
   // Audio Context / Analyser Node
   analyserNode: AnalyserNode | null;
+
+  // Sleep Timer
+  sleepTimerRemaining: number | null;
+  setSleepTimer: (minutes: number | null) => void;
 }
 
 const MusicContext = createContext<MusicContextType | undefined>(undefined);
@@ -87,6 +91,10 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [analyserNode, setAnalyserNode] = useState<AnalyserNode | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
+
+  // Sleep Timer States and Interval Ref
+  const [sleepTimerRemaining, setSleepTimerRemaining] = useState<number | null>(null);
+  const sleepTimerIntervalRef = useRef<any>(null);
   
   // State
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -170,16 +178,59 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const handleCanPlay = () => {};
 
+    const handleError = () => {
+      const audioErr = audio.error;
+      // If there is a media load error and we have crossOrigin turned on, bypass crossOrigin and retry
+      if (audioErr && audio.crossOrigin === 'anonymous') {
+        console.warn('Audio metadata load blocked by CORS restrictions. Re-loading with direct stream channel fallback...');
+        audio.removeAttribute('crossorigin');
+        audio.crossOrigin = null as any;
+
+        const savedSrc = audio.src;
+        // Reset src pointer to clear stale media decoders
+        audio.src = '';
+        audio.load();
+        
+        // Reload original source directly without CORS credentials
+        audio.src = savedSrc;
+        audio.load();
+        
+        // Attempt immediate playback resumes
+        audio.play()
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((playErr) => {
+            const isAutoplayBlock = playErr instanceof Error && (
+              playErr.name === 'NotAllowedError' || 
+              playErr.message?.includes('interact') || 
+              playErr.message?.includes('autoplay')
+            );
+
+            if (playErr instanceof Error && (playErr.name === 'AbortError' || playErr.message?.includes('interrupted'))) {
+              console.log('Audio playback request interrupted.');
+            } else if (isAutoplayBlock) {
+              console.log('Audio playback paused because user has not interacted with the document yet (standard browser policy).');
+              setIsPlaying(false);
+            } else {
+              console.error('Playback failed on anonymous direct stream channels fallback:', playErr);
+            }
+          });
+      }
+    };
+
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('durationchange', handleDurationChange);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('durationchange', handleDurationChange);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('error', handleError);
       audio.pause();
     };
   }, []);
@@ -214,6 +265,49 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       initAudioAnalysis();
     }
   };
+
+  const setSleepTimer = (minutes: number | null) => {
+    if (sleepTimerIntervalRef.current) {
+      clearInterval(sleepTimerIntervalRef.current);
+      sleepTimerIntervalRef.current = null;
+    }
+
+    if (minutes === null || minutes <= 0) {
+      setSleepTimerRemaining(null);
+      return;
+    }
+
+    const totalSeconds = Math.round(minutes * 60);
+    setSleepTimerRemaining(totalSeconds);
+
+    const interval = setInterval(() => {
+      setSleepTimerRemaining((prev) => {
+        if (prev === null || prev <= 1) {
+          clearInterval(interval);
+          if (sleepTimerIntervalRef.current === interval) {
+            sleepTimerIntervalRef.current = null;
+          }
+          if (audioRef.current) {
+            audioRef.current.pause();
+          }
+          setIsPlaying(false);
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    sleepTimerIntervalRef.current = interval;
+  };
+
+  // Clean up sleep timer interval on unmount
+  useEffect(() => {
+    return () => {
+      if (sleepTimerIntervalRef.current) {
+        clearInterval(sleepTimerIntervalRef.current);
+      }
+    };
+  }, []);
 
   // Handle Loading of User Specific Data in Real Time
   useEffect(() => {
@@ -304,6 +398,7 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     setCurrentTrack(track);
     setDuration(track.duration || 0);
+    audioRef.current.crossOrigin = 'anonymous';
     audioRef.current.src = track.audioUrl;
     audioRef.current.volume = isMuted ? 0 : volume;
     secondsPlayed.current = 0;
@@ -832,7 +927,9 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         addTrackToPlaylist,
         removeTrackFromPlaylist,
         updatePlaylistDetails,
-        generateAiPlaylist
+        generateAiPlaylist,
+        sleepTimerRemaining,
+        setSleepTimer
       }}
     >
       {children}
